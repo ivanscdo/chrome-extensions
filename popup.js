@@ -1,16 +1,16 @@
-let changeColor = document.getElementById('changeColor');
+let buttons = document.getElementById('buttons');
+const buttonColors = ['#3aa757', '#e8453c', '#f9bb2d', '#4688f1'];
 
-chrome.storage.sync.get('color', function(data){
-    changeColor.style.backgroundColor = data.color;
-    changeColor.setAttribute('value', data.color);
-});
-
-changeColor.onclick = function(element){
-    let color =element.target.value;
-    chrome.tabs.query({active:true, currentWindow:true}, function(tabs){
-        chrome.tabs.executeScript(
-            tabs[0].id,
-            {code: 'document.body.style.backgroundColor="' + color + '";'}
-        );
+for (let color of buttonColors) {
+    let button = document.createElement('button');
+    button.style.backgroundColor = color;
+    button.addEventListener('click', function () {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            chrome.tabs.executeScript(
+                tabs[0].id,
+                { code: 'document.body.style.backgroundColor="' + color + '";' }
+            );
+        });
     });
-};
+    buttons.appendChild(button);
+}
